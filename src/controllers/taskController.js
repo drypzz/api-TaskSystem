@@ -56,7 +56,7 @@ class TasksController {
 
             const newTask = await Task.create({ titulo, status, idProject, idUser });
 
-            res.status(201).json(newTask);
+            res.status(201).json({ message: "✅ Tarefa criada com sucesso", newTask });
         } catch (error) {
             res.status(500).json({ message: "❌ Erro ao criar tarefa", error });
         };
@@ -95,7 +95,7 @@ class TasksController {
 
             await task.save();
 
-            res.json(task);
+            res.json({ message: "✅ Tarefa atualizada com sucesso", task });
         } catch (error) {
             res.status(500).json({ message: "❌ Erro ao atualizar tarefa", error });
         };
