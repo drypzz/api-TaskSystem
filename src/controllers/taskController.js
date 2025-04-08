@@ -74,10 +74,24 @@ class TasksController {
                 return res.status(404).json({ message: "❌ Tarefa não encontrada" });
             };
 
-            task.titulo = titulo ?? task.titulo;
-            task.status = status ?? task.status;
-            task.idProject = idProject ?? task.idProject;
-            task.idUser = idUser ?? task.idUser;
+            if (titulo) task.titulo = titulo;
+            if (status) task.status = status;
+            if (idProject) {
+                const findProject = await Project.findByPk(idProject);
+                if (!findProject) {
+                    return res.status(404).json({ message: "❌ Projeto não encontrado" });
+                };
+
+                task.idProject = idProject;
+            };
+            if (idUser) {
+                const findUser = await User.findByPk(idUser);
+                if (!findUser) {
+                    return res.status(404).json({ message: "❌ Usuário não encontrado" });
+                };
+
+                task.idUser = idUser;
+            };
 
             await task.save();
 

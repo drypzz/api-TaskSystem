@@ -1,4 +1,5 @@
 const Project = require("../models/project");
+const Task = require("../models/task");
 
 class ProjectController {
 
@@ -62,8 +63,15 @@ class ProjectController {
                 return res.status(404).json({ message: "❌ Projeto não encontrado" });
             };
 
-            project.titulo = titulo ?? project.titulo;
-            project.descricao = descricao ?? project.descricao;
+            if (titulo){
+                const findProject = await Project.findOne({ where: { titulo } });
+                if (findProject) {
+                    return res.status(400).json({ message: "❌ Projeto já cadastrado" });
+                };
+
+                project.titulo = titulo;
+            };
+            if (descricao) project.descricao = descricao;
 
             await project.save();
 
@@ -83,9 +91,14 @@ class ProjectController {
                 return res.status(404).json({ message: "❌ Projeto não encontrado" });
             };
 
+            const tarefas = await Task.findAll({ where: { idProject: id } });
+            if (tarefas.length > 0) {
+                await Task.destroy({ where: { idProject: id } });
+            };
+
             await project.destroy();
 
-            res.json({ message: "✅ Projeto deletado com sucesso" });
+            res.json({ message: `✅ Projeto deletado com sucesso${tarefas.length > 0 ? ` junto com ${tarefas.length} tarefa(s)` : ""}`});
         } catch (error) {
             res.status(500).json({ message: "❌ Erro ao deletar projeto", error });
         };
