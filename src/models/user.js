@@ -1,8 +1,8 @@
-const database = require('../config/database');
+const database = require("../config/database");
 
 class User {
     constructor() {
-        this.model = database.db.define('users', {
+        this.model = database.db.define("users", {
             id: {
                 type: database.db.Sequelize.INTEGER,
                 primaryKey: true,

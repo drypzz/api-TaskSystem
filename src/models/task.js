@@ -1,8 +1,8 @@
-const database = require('../config/database');
+const database = require("../config/database");
 
 class Task {
     constructor() {
-        this.model = database.db.define('tasks', {
+        this.model = database.db.define("tasks", {
             id: {
                 type: database.db.Sequelize.INTEGER,
                 primaryKey: true,
@@ -17,15 +17,15 @@ class Task {
             idProject: {
                 type: database.db.Sequelize.INTEGER,
                 references: {
-                    model: 'projects',
-                    key: 'id'
+                    model: "projects",
+                    key: "id"
                 }
             },
             idUser: {
                 type: database.db.Sequelize.INTEGER,
                 references: {
-                    model: 'users',
-                    key: 'id'
+                    model: "users",
+                    key: "id"
                 }
             }
         });

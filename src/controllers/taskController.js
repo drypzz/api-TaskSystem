@@ -1,6 +1,6 @@
-const Task = require('../models/task');
-const Project = require('../models/project');
-const User = require('../models/user');
+const Task = require("../models/task");
+const Project = require("../models/project");
+const User = require("../models/user");
 
 class TasksController {
 
@@ -10,7 +10,7 @@ class TasksController {
             const tasks = await Task.findAll();
             res.json(tasks);
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao buscar tarefas', error });
+            res.status(500).json({ message: "❌ Erro ao buscar tarefas", error });
         };
     };
 
@@ -21,12 +21,12 @@ class TasksController {
             const task = await Task.findByPk(id);
 
             if (!task) {
-                return res.status(404).json({ message: 'Tarefa não encontrada' });
+                return res.status(404).json({ message: "❌ Tarefa não encontrada" });
             };
 
             res.json(task);
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao buscar tarefa', error });
+            res.status(500).json({ message: "❌ Erro ao buscar tarefa", error });
         };
     };
 
@@ -36,29 +36,29 @@ class TasksController {
             const { titulo, status, idProject, idUser } = req.body;
 
             if (!titulo || !status || !idProject || !idUser) {
-                return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+                return res.status(400).json({ message: "❌ Todos os campos são obrigatórios" });
             };
 
             const findTask = await Task.findOne({ where: { titulo } });
             if (findTask) {
-                return res.status(400).json({ message: 'Tarefa já cadastrada' });
+                return res.status(400).json({ message: "❌ Tarefa já cadastrada" });
             };
 
             const findProject = await Project.findByPk(idProject);
             if (!findProject) {
-                return res.status(404).json({ message: 'Projeto não encontrado' });
+                return res.status(404).json({ message: "❌ Projeto não encontrado" });
             };
 
             const findUser = await User.findByPk(idUser);
             if (!findUser) {
-                return res.status(404).json({ message: 'Usuário não encontrado' });
+                return res.status(404).json({ message: "❌ Usuário não encontrado" });
             };
 
             const newTask = await Task.create({ titulo, status, idProject, idUser });
 
             res.status(201).json(newTask);
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao criar tarefa', error });
+            res.status(500).json({ message: "❌ Erro ao criar tarefa", error });
         };
     };
 
@@ -71,7 +71,7 @@ class TasksController {
             const task = await Task.findByPk(id);
 
             if (!task) {
-                return res.status(404).json({ message: 'Tarefa não encontrada' });
+                return res.status(404).json({ message: "❌ Tarefa não encontrada" });
             };
 
             task.titulo = titulo ?? task.titulo;
@@ -83,7 +83,7 @@ class TasksController {
 
             res.json(task);
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao atualizar tarefa', error });
+            res.status(500).json({ message: "❌ Erro ao atualizar tarefa", error });
         };
     };
 
@@ -94,14 +94,14 @@ class TasksController {
             const task = await Task.findByPk(id);
 
             if (!task) {
-                return res.status(404).json({ message: 'Tarefa não encontrada' });
+                return res.status(404).json({ message: "❌ Tarefa não encontrada" });
             };
 
             await task.destroy();
 
-            res.json({ message: 'Tarefa deletada com sucesso' });
+            res.json({ message: "✅ Tarefa deletada com sucesso" });
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao deletar tarefa', error });
+            res.status(500).json({ message: "❌ Erro ao deletar tarefa", error });
         };
     };
 };

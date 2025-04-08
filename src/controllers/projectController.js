@@ -1,4 +1,4 @@
-const Project = require('../models/project');
+const Project = require("../models/project");
 
 class ProjectController {
 
@@ -8,7 +8,7 @@ class ProjectController {
             const projects = await Project.findAll();
             res.json(projects);
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao buscar projetos', error });
+            res.status(500).json({ message: "❌ Erro ao buscar projetos", error });
         };
     };
 
@@ -19,12 +19,12 @@ class ProjectController {
             const project = await Project.findByPk(id);
 
             if (!project) {
-                return res.status(404).json({ message: 'Projeto não encontrado' });
+                return res.status(404).json({ message: "❌ Projeto não encontrado" });
             };
 
             res.json(project);
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao buscar projeto', error });
+            res.status(500).json({ message: "❌ Erro ao buscar projeto", error });
         };
     };
 
@@ -34,19 +34,19 @@ class ProjectController {
             const { titulo, descricao } = req.body;
 
             if (!titulo || !descricao) {
-                return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+                return res.status(400).json({ message: "❌ Todos os campos são obrigatórios" });
             };
 
             const findProject = await Project.findOne({ where: { titulo } });
             if (findProject) {
-                return res.status(400).json({ message: 'Projeto já cadastrado' });
+                return res.status(400).json({ message: "❌ Projeto já cadastrado" });
             };
 
             const newProject = await Project.create({ titulo, descricao });
 
-            res.status(201).json(newProject);
+            res.status(201).json({ message: "✅ Projeto criado com sucesso", project: newProject });
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao criar projeto', error });
+            res.status(500).json({ message: "❌ Erro ao criar projeto", error });
         };
     };
 
@@ -59,7 +59,7 @@ class ProjectController {
             const project = await Project.findByPk(id);
 
             if (!project) {
-                return res.status(404).json({ message: 'Projeto não encontrado' });
+                return res.status(404).json({ message: "❌ Projeto não encontrado" });
             };
 
             project.titulo = titulo ?? project.titulo;
@@ -67,9 +67,9 @@ class ProjectController {
 
             await project.save();
 
-            res.json(project);
+            res.json({ message: "✅ Projeto atualizado com sucesso", project });
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao atualizar projeto', error });
+            res.status(500).json({ message: "❌ Erro ao atualizar projeto", error });
         };
     };
 
@@ -80,14 +80,14 @@ class ProjectController {
             const project = await Project.findByPk(id);
 
             if (!project) {
-                return res.status(404).json({ message: 'Projeto não encontrado' });
+                return res.status(404).json({ message: "❌ Projeto não encontrado" });
             };
 
             await project.destroy();
 
-            res.json({ message: 'Projeto deletado com sucesso' });
+            res.json({ message: "✅ Projeto deletado com sucesso" });
         } catch (error) {
-            res.status(500).json({ message: 'Erro ao deletar projeto', error });
+            res.status(500).json({ message: "❌ Erro ao deletar projeto", error });
         };
     };
 };
