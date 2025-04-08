@@ -4,143 +4,106 @@ const User = require('../models/user');
 
 class TasksController {
 
-    // Exbir todas as tarefas
-    static getTasks(req, res) {
-        const tasks = Task.data;
-
-        res.json(tasks);
+    // Exibir todas as tarefas
+    static async getTasks(req, res) {
+        try {
+            const tasks = await Task.findAll();
+            res.json(tasks);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao buscar tarefas', error });
+        };
     };
 
-    // Exibir uma tarefa especifica pelo ID
-    static getTaskByID(req, res) {
-        const id = Number(req.params.id);
-        const task = Task.data.find(e => e.id === id);
+    // Exibir uma tarefa específica pelo ID
+    static async getTaskByID(req, res) {
+        try {
+            const id = Number(req.params.id);
+            const task = await Task.findByPk(id);
 
-        if (!task) {
-            res.status(404).json({ message: 'Task not found' });
-            return;
+            if (!task) {
+                return res.status(404).json({ message: 'Tarefa não encontrada' });
+            };
+
+            res.json(task);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao buscar tarefa', error });
         };
-
-        res.json(task);
     };
 
-    // Criar uma tarefa
-    static createTask(req, res) {
-        const { title, status, idProject, idUser } = req.body;
-        const id = Task.data.length + 1;
-        const task = new Task(id, title, status, idProject, idUser);
+    // Criar uma nova tarefa
+    static async createTask(req, res) {
+        try {
+            const { titulo, status, idProject, idUser } = req.body;
 
-        const titleRegistred = Task.data.find(e => e.title === title); // Verifica se o Titulo da Tarefa ja existe
-        const project = Project.data.find(e => e.id === idProject); // Verifica se o projeto de tal ID existe/
-        const user = User.data.find(e => e.id === idUser); // Verifica se o usuario de tal ID existe
-        
-        if (titleRegistred) {
-            res.status(400).json({ message: "Task already exists" })
-            return;
+            if (!titulo || !status || !idProject || !idUser) {
+                return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+            };
+
+            const findTask = await Task.findOne({ where: { titulo } });
+            if (findTask) {
+                return res.status(400).json({ message: 'Tarefa já cadastrada' });
+            };
+
+            const findProject = await Project.findByPk(idProject);
+            if (!findProject) {
+                return res.status(404).json({ message: 'Projeto não encontrado' });
+            };
+
+            const findUser = await User.findByPk(idUser);
+            if (!findUser) {
+                return res.status(404).json({ message: 'Usuário não encontrado' });
+            };
+
+            const newTask = await Task.create({ titulo, status, idProject, idUser });
+
+            res.status(201).json(newTask);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao criar tarefa', error });
         };
-
-        if (!project) {
-            res.status(404).json({ message: 'Project not found' });
-            return;
-        };
-
-        if (!user) {
-            res.status(404).json({ message: 'User not found' });
-            return;
-        };
-
-        if (title === undefined) {
-            res.status(400).json({ message: 'Title is required' });
-            return;  
-        };
-
-        if (status === undefined) {
-            res.status(400).json({ message: 'Status is required' });
-            return;
-        };
-
-        if (idProject === undefined) {
-            res.status(400).json({ message: 'idProject is required' });
-            return;
-        };
-
-        if (idUser === undefined) {
-            res.status(400).json({ message: 'idUser is required' });
-            return;
-        };
-
-        Task.data.push(task);
-
-        res.status(201).json(task);
     };
 
-    // Atualizar a tarefa
-    static updateTask(req, res) {
-        const id = Number(req.params.id);
-        const { title, status, idProject, idUser } = req.body;
-        const task = Task.data.find(e => e.id === id);
+    // Atualizar uma tarefa existente
+    static async updateTask(req, res) {
+        try {
+            const id = Number(req.params.id);
+            const { titulo, status, idProject, idUser } = req.body;
 
-        const project = Project.data.find(e => e.id === idProject); // Verifica se o projeto de tal ID existe/
-        const user = User.data.find(e => e.id === idUser); // Verifica se o usuario de tal ID existe
+            const task = await Task.findByPk(id);
 
-        if (!task) {
-            res.status(404).json({ message: 'Task not found' });
-            return;
+            if (!task) {
+                return res.status(404).json({ message: 'Tarefa não encontrada' });
+            };
+
+            task.titulo = titulo ?? task.titulo;
+            task.status = status ?? task.status;
+            task.idProject = idProject ?? task.idProject;
+            task.idUser = idUser ?? task.idUser;
+
+            await task.save();
+
+            res.json(task);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao atualizar tarefa', error });
         };
-
-        if (!project) {
-            res.status(404).json({ message: 'Project not found' });
-            return;
-        };
-
-        if (!user) {
-            res.status(404).json({ message: 'User not found' });
-            return;
-        };
-
-        if (title === undefined) {
-            res.status(400).json({ message: 'Title is required' });
-            return;  
-        };
-
-        if (status === undefined) {
-            res.status(400).json({ message: 'Status is required' });
-            return;
-        };
-
-        if (idProject === undefined) {
-            res.status(400).json({ message: 'idProject is required' });
-            return;
-        };
-
-        if (idUser === undefined) {
-            res.status(400).json({ message: 'idUser is required' });
-            return;
-        };
-
-        task.title = title;
-        task.status = status;
-        task.idProject = idProject;
-        task.idUser = idUser;
-
-        res.json(task);
     };
 
     // Deletar uma tarefa
-    static deleteTask(req, res) {
-        const id = Number(req.params.id);
-        const index = Task.data.findIndex(e => e.id === id);
+    static async deleteTask(req, res) {
+        try {
+            const id = Number(req.params.id);
+            const task = await Task.findByPk(id);
 
-        if (index === -1) {
-            res.status(404).json({ message: 'Task not found' });
-            return;
+            if (!task) {
+                return res.status(404).json({ message: 'Tarefa não encontrada' });
+            };
+
+            await task.destroy();
+
+            res.json({ message: 'Tarefa deletada com sucesso' });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao deletar tarefa', error });
         };
-
-        Task.data.splice(index, 1);
-
-        res.json({ message: 'Task deleted' });
     };
-
 };
 
 module.exports = TasksController;

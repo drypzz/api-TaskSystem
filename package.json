@@ -10,6 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2"
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.0",
+    "pg": "^8.14.1",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   }
 }

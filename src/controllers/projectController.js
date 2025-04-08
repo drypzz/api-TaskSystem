@@ -3,102 +3,93 @@ const Project = require('../models/project');
 class ProjectController {
 
     // Exibir todos os projetos
-    static getProjects(req, res) {
-        const projects = Project.data;
-
-        res.json(projects);
+    static async getProjects(req, res) {
+        try {
+            const projects = await Project.findAll();
+            res.json(projects);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao buscar projetos', error });
+        };
     };
 
-     // Exibir um projeto especifica pelo ID
-    static getProjectByID(req, res) {
-        const id = Number(req.params.id);
-        const project = Project.data.find(e => e.id === id);
+    // Exibir um projeto específico pelo ID
+    static async getProjectByID(req, res) {
+        try {
+            const id = Number(req.params.id);
+            const project = await Project.findByPk(id);
 
-        if (!project){
-            res.status(404).json({ message: 'Project not found' });
-            return;
+            if (!project) {
+                return res.status(404).json({ message: 'Projeto não encontrado' });
+            };
+
+            res.json(project);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao buscar projeto', error });
         };
-
-        res.json(project);
     };
 
-    // Cria um projeto
-    static createProject(req, res) {
-        const { name, description } = req.body;
-        const id = Project.data.length + 1;
-        const project = new Project(id, name, description);
+    // Criar um novo projeto
+    static async createProject(req, res) {
+        try {
+            const { titulo, descricao } = req.body;
 
-        const titleRegistred = Project.data.find(e => e.name === name); // Verifica se o Titulo do Projeto ja existe
+            if (!titulo || !descricao) {
+                return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+            };
 
-        if (titleRegistred) {
-            res.status(400).json({ message: "Project already exists" })
-            return;
+            const findProject = await Project.findOne({ where: { titulo } });
+            if (findProject) {
+                return res.status(400).json({ message: 'Projeto já cadastrado' });
+            };
+
+            const newProject = await Project.create({ titulo, descricao });
+
+            res.status(201).json(newProject);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao criar projeto', error });
         };
-
-        if (name === undefined) {
-            res.status(400).json({ message: 'Name is required' });
-            return;  
-        };
-
-        if (description === undefined) {
-            res.status(400).json({ message: 'Description is required' });
-            return;
-        };
-
-        Project.data.push(project);
-
-        res.status(201).json(project);
     };
 
-    // Atualiza um projeto
-    static updateProject(req, res) {
-        const id = Number(req.params.id);
-        const { name, description } = req.body;
-        const project = Project.data.find(e => e.id === id);
+    // Atualizar um projeto existente
+    static async updateProject(req, res) {
+        try {
+            const id = Number(req.params.id);
+            const { titulo, descricao } = req.body;
 
-        const titleRegistred = Project.data.find(e => e.name === name); // Verifica se o Titulo do Projeto ja existe
+            const project = await Project.findByPk(id);
 
-        if (titleRegistred) {
-            res.status(400).json({ message: "Project already exists" })
-            return;
+            if (!project) {
+                return res.status(404).json({ message: 'Projeto não encontrado' });
+            };
+
+            project.titulo = titulo ?? project.titulo;
+            project.descricao = descricao ?? project.descricao;
+
+            await project.save();
+
+            res.json(project);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao atualizar projeto', error });
         };
-
-        if (!project) {
-            res.status(404).json({ message: 'Project not found' });
-            return;
-        };
-
-        if (name === undefined) {
-            res.status(400).json({ message: 'Name is required' });
-            return;  
-        };
-
-        if (description === undefined) {
-            res.status(400).json({ message: 'Description is required' });
-            return;
-        };
-
-        project.name = name;
-        project.description = description;
-
-        res.json(project);
     };
 
-    // Deleta um projeto
-    static deleteProject(req, res) {
-        const id = Number(req.params.id);
-        const index = Project.data.findIndex(e => e.id === id);
+    // Deletar um projeto
+    static async deleteProject(req, res) {
+        try {
+            const id = Number(req.params.id);
+            const project = await Project.findByPk(id);
 
-        if (index === -1) {
-            res.status(404).json({ message: 'Project not found' });
-            return;
+            if (!project) {
+                return res.status(404).json({ message: 'Projeto não encontrado' });
+            };
+
+            await project.destroy();
+
+            res.json({ message: 'Projeto deletado com sucesso' });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao deletar projeto', error });
         };
-
-        Project.data.splice(index, 1);
-
-        res.json({ message: 'Project deleted' });
     };
-
 };
 
 module.exports = ProjectController;

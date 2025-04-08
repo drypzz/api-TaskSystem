@@ -1,14 +1,21 @@
-class Project {
-    constructor(id, name, description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
+const database = require('../config/database');
 
-    static data = [
-        new Project(1, 'Project 1', 'Description 1'),
-        new Project(2, 'Project 2', 'Description 2'),
-    ];
+class Project {
+    constructor() {
+        this.model = database.db.define('projects', {
+            id: {
+                type: database.db.Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            titulo: {
+                type: database.db.Sequelize.STRING
+            },
+            descricao: {
+                type: database.db.Sequelize.STRING
+            }
+        });
+    };
 };
 
-module.exports = Project;
+module.exports = (new Project).model;

@@ -1,45 +1,32 @@
 const express = require('express');
 const app = express();
+const port = 3000;
+const database = require('./src/config/database');
 
-const ProjectController = require('./src/controllers/projectController');
-const TasksController = require('./src/controllers/taskController');
+const userRoutes = require('./src/routes/userRoutes');
+const taskRoutes = require('./src/routes/taskRoutes');
+const projectRoutes = require('./src/routes/projectRoutes');
+
 const UserController = require('./src/controllers/userController');
-
-const port = 5000; // Porta do servidor
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+// Login
+app.post('/login', UserController.login);
+app.post('/register', UserController.register);
 
-// Rotas para os projetos
+// Usando os routers
+app.use('/users', userRoutes);
+app.use('/tasks', taskRoutes);
+app.use('/projects', projectRoutes);
 
-app.get('/projects', ProjectController.getProjects);
-app.get('/projects/:id', ProjectController.getProjectByID);
-app.post('/projects', ProjectController.createProject);
-app.put('/projects/:id', ProjectController.updateProject);
-app.delete('/projects/:id', ProjectController.deleteProject);
-
-// Rotas para as tarefas
-
-app.get('/tasks', TasksController.getTasks);
-app.get('/tasks/:id', TasksController.getTaskByID);
-app.post('/tasks', TasksController.createTask);
-app.put('/tasks/:id', TasksController.updateTask);
-app.delete('/tasks/:id', TasksController.deleteTask);
-
-// Rotas para os usuarios
-
-app.get('/users', UserController.getUsers);
-app.get('/users/:id', UserController.getUserByID);
-app.post('/users', UserController.createUser);
-app.put('/users/:id', UserController.updateUser);
-app.delete('/users/:id', UserController.deleteUser);
-
-
-// Iniciar servidor
-
-app.listen(Number(port), () => {
-    console.log(`🚀 Server is running in http://localhost:${port}`);
+// Inicia o servidor
+database.db.sync({ force: true })
+.then(() => {
+    app.listen(Number(port), () => {
+        console.log(`🚀 Server is running on http://localhost:${port}`)
+    })
+})
+.catch((error) => {
+    console.error('❌ Error connecting to the database', error);
 });
