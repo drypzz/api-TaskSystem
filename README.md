@@ -37,7 +37,7 @@ src/
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/api-TaskSystem.git
+git clone https://github.com/drypzz/api-TaskSystem.git
 cd api-TaskSystem
 ```
 
