@@ -6,11 +6,32 @@ class ProjectController {
     // Exibir todos os projetos
     static async getProjects(req, res) {
         try {
-            const projects = await Project.findAll();
-            res.json(projects);
+            const page = parseInt(req.query.page) || 1;
+            const limit = 30;
+
+            if (!page) {
+                const projects = await Project.findAll();
+                return res.json({ totalprojects: projects.length, projects });
+            };
+
+            const offset = (page - 1) * limit;
+
+            const { count, rows: projects } = await Project.findAndCountAll({ limit, offset });
+
+            if (projects.length === 0){
+                return res.status(404).json({ message: "❌ Nenhum projeto encontrado para esta página." });
+            };
+    
+            res.json({
+                currentPage: page,
+                totalInPage: projects.length,
+                totalPages: Math.ceil(count / limit),
+                totalprojects: count,
+                projects,
+            });
         } catch (error) {
-            res.status(500).json({ message: "❌ Erro ao buscar projetos", error });
-        };
+            res.status(500).json({ message: "❌ Erro ao buscar tarefas", error });
+        }
     };
 
     // Exibir um projeto específico pelo ID
@@ -65,12 +86,13 @@ class ProjectController {
 
             if (titulo){
                 const findProject = await Project.findOne({ where: { titulo } });
-                if (findProject) {
+                if (findProject && findProject.id !== id) {
                     return res.status(400).json({ message: "❌ Projeto já cadastrado" });
                 };
 
                 project.titulo = titulo;
             };
+            
             if (descricao) project.descricao = descricao;
 
             await project.save();

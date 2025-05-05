@@ -84,8 +84,8 @@ Servidor rodando em: `http://localhost:3000`
 
 | Método | Rota                    | Descrição                        |
 |--------|-------------------------|----------------------------------|
-| POST   | `/login`                | Login e geração de token         |
-| POST   | `/register`             | Criação de novo usuário          |
+| POST   | `/api/v1/login`         | Login e geração de token         |
+| POST   | `/api/v1/register`      | Criação de novo usuário          |
 
 ### ⚠️ Rotas Protegidas (JWT)
 
@@ -93,31 +93,31 @@ Servidor rodando em: `http://localhost:3000`
 
 | Método | Rota                    | Descrição                        |
 |--------|-------------------------|----------------------------------|
-| POST   | `/tasks`                | Criar nova tarefa                |
-| GET    | `/tasks`                | Listar todas as tarefas          |
-| GET    | `/tasks/:id`            | Listar uma tarefas               |
-| PUT    | `/tasks/:id`            | Atualizar uma tarefa             |
-| DELETE | `/tasks/:id`            | Deletar uma tarefa               |
+| POST   | `/api/v1/tasks`         | Criar nova tarefa                |
+| GET    | `/api/v1/tasks`         | Listar todas as tarefas          |
+| GET    | `/api/v1/tasks/:id`     | Listar uma tarefas               |
+| PUT    | `/api/v1/tasks/:id`     | Atualizar uma tarefa             |
+| DELETE | `/api/v1/tasks/:id`     | Deletar uma tarefa               |
 
 #### 2. Endpoints Usuarios
 
 | Método | Rota                    | Descrição                        |
 |--------|-------------------------|----------------------------------|
-| POST   | `/users`                | Criar novo usuario               |
-| GET    | `/users`                | Listar todos os usuarios         |
-| GET    | `/users/:id`            | Lista um usuario                 |
-| PUT    | `/users/:id`            | Atualizar um usuario             |
-| DELETE | `/users/:id`            | Deletar um usuario               |
+| POST   | `/api/v1/users`         | Criar novo usuario               |
+| GET    | `/api/v1/users`         | Listar todos os usuarios         |
+| GET    | `/api/v1/users/:id`     | Lista um usuario                 |
+| PUT    | `/api/v1/users/:id`     | Atualizar um usuario             |
+| DELETE | `/api/v1/users/:id`     | Deletar um usuario               |
 
 #### 3. Endpoints Projects
 
 | Método | Rota                    | Descrição                        |
 |--------|-------------------------|----------------------------------|
-| POST   | `/projects`             | Criar novo projeto               |
-| GET    | `/projects`             | Listar todos os projeto          |
-| GET    | `/projects/:id`         | Lista um projeto                 |
-| PUT    | `/projects/:id`         | Atualizar um projeto             |
-| DELETE | `/projects/:id`         | Deletar um projeto               |
+| POST   | `/api/v1/projects`      | Criar novo projeto               |
+| GET    | `/api/v1/projects`      | Listar todos os projeto          |
+| GET    | `/api/v1/projects/:id`  | Lista um projeto                 |
+| PUT    | `/api/v1/projects/:id`  | Atualizar um projeto             |
+| DELETE | `/api/v1/projects/:id`  | Deletar um projeto               |
 
 ---
 

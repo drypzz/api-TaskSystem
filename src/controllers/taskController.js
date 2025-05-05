@@ -7,11 +7,32 @@ class TasksController {
     // Exibir todas as tarefas
     static async getTasks(req, res) {
         try {
-            const tasks = await Task.findAll();
-            res.json(tasks);
+            const page = parseInt(req.query.page) || 1;
+            const limit = 30;
+
+            if (!page) {
+                const tasks = await Task.findAll();
+                return res.json({ totalTasks: tasks.length, tasks });
+            };
+
+            const offset = (page - 1) * limit;
+
+            const { count, rows: tasks } = await Task.findAndCountAll({ limit, offset });
+
+            if (tasks.length === 0){
+                return res.status(404).json({ message: "❌ Nenhuma tarefa encontrada para esta página." });
+            };
+    
+            res.json({
+                currentPage: page,
+                totalInPage: tasks.length,
+                totalPages: Math.ceil(count / limit),
+                totalTasks: count,
+                tasks,
+            });
         } catch (error) {
             res.status(500).json({ message: "❌ Erro ao buscar tarefas", error });
-        };
+        }
     };
 
     // Exibir uma tarefa específica pelo ID
@@ -74,8 +95,16 @@ class TasksController {
                 return res.status(404).json({ message: "❌ Tarefa não encontrada" });
             };
 
-            if (titulo) task.titulo = titulo;
+            if (titulo) {
+                const taskWithSameTitle = await Task.findOne({ where: { titulo } });
+                if (taskWithSameTitle && taskWithSameTitle.id !== id) {
+                    return res.status(400).json({ message: "❌ Tarefa já cadastrada" });
+                }
+                task.titulo = titulo;
+            };
+
             if (status) task.status = status;
+            
             if (idProject) {
                 const findProject = await Project.findByPk(idProject);
                 if (!findProject) {

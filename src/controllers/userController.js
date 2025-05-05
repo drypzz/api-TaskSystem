@@ -9,12 +9,39 @@ class UserController {
     // Exibir todos os usuários
     static async getUsers(req, res) {
         try {
-            const users = await User.findAll();
-            res.json(users);
+            const page = parseInt(req.query.page) || 1;
+            const limit = 30;
+            
+            if (!page) {
+                const users = await User.findAll({
+                    attributes: { exclude: ['senha'] },
+                });
+                return res.json({ totalUsers: users.length, users });
+            };
+            
+            const offset = (page - 1) * limit;
+            const { count, rows: users } = await User.findAndCountAll({ limit, offset,
+                attributes: { exclude: ['senha'] },
+            });
+
+            if (users.length === 0) {
+                return res.status(404).json({ message: "❌ Nenhum usuário encontrado para esta página." });
+            };
+    
+            const totalPages = Math.ceil(count / limit);
+    
+            res.json({
+                currentPage: page,
+                totalPages,
+                totalInPage: users.length,
+                totalUsers: count,
+                users,
+            });
         } catch (error) {
             res.status(500).json({ message: "❌ Erro ao buscar usuários", error });
-        };
+        }
     };
+    
 
     // Exibir um usuário específico pelo ID
     static async getUserByID(req, res) {
@@ -68,7 +95,15 @@ class UserController {
             };
     
             if (nome) user.nome = nome;
-            if (email) user.email = email;
+
+            if (email && email !== user.email) {
+                const existingEmail = await User.findOne({ where: { email } });
+                if (existingEmail) {
+                    return res.status(400).json({ message: "❌ Email já cadastrado" });
+                }
+                user.email = email;
+            };
+
             if (senha) {
                 user.senha = await bcrypt.hash(senha, 10);
             };

@@ -14,12 +14,12 @@ const UserController = require("./src/controllers/userController");
 
 const port = process.env.API_PORT || 3000;
 
-app.post("/login", UserController.loginUser);
-app.post("/register", UserController.createUser);
+app.post("/api/v1/login", UserController.loginUser);
+app.post("/api/v1/register", UserController.createUser);
 
-app.use("/users", userRoutes);
-app.use("/tasks", taskRoutes);
-app.use("/projects", projectRoutes);
+app.use("/api/v1", userRoutes);
+app.use("/api/v1", taskRoutes);
+app.use("/api/v1", projectRoutes);
 
 database.db.sync({ force: false })
 .then(() => {
