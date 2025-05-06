@@ -3,6 +3,13 @@
 
 Este projeto é uma API RESTful construída com **Node.js**, **Express** e **Sequelize**, utilizando **MySQL** como banco de dados relacional (via **XAMPP**). A estrutura do projeto segue a arquitetura MVC (Model-View-Controller), garantindo escalabilidade e organização.
 
+## 📘 Documentação da API
+
+[![SwaggerHub](https://img.shields.io/badge/Documentação-blue?logo=swagger)](https://app.swaggerhub.com/apis-docs/drypzzdev/TaskSystem/1.0.0)
+
+A documentação da API está disponível no SwaggerHub, com exemplos de uso e todos os endpoints descritos.
+
+
 ---
 
 ## 🚀 Tecnologias Utilizadas
