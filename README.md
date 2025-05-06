@@ -82,42 +82,468 @@ Servidor rodando em: `http://localhost:3000`
 
 ### ✔️ Login e Registro
 
-| Método | Rota                    | Descrição                        |
-|--------|-------------------------|----------------------------------|
-| POST   | `/api/v1/login`         | Login e geração de token         |
-| POST   | `/api/v1/register`      | Criação de novo usuário          |
+<details>
+  <summary>POST - /api/v1/register</summary>
 
-### ⚠️ Rotas Protegidas (JWT)
+### Request:
+  ```json
+    {
+        "nome": "dpz",
+        "email": "dpz@gmail.com",
+        "senha": "123456"
+    }
+  ```
 
-#### 1. Endpoints Tarefas
+### Result:
+  ```json
+   {
+        "message": "✅ Usuário criado com sucesso",
+        "newUser": {
+            "id": 3,
+            "nome": "dpz",
+            "email": "dpz@gmail.com",
+            "senha": "$2EK8X4qsRLZNvG",
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
 
-| Método | Rota                    | Descrição                        |
-|--------|-------------------------|----------------------------------|
-| POST   | `/api/v1/tasks`         | Criar nova tarefa                |
-| GET    | `/api/v1/tasks`         | Listar todas as tarefas          |
-| GET    | `/api/v1/tasks/:id`     | Listar uma tarefas               |
-| PUT    | `/api/v1/tasks/:id`     | Atualizar uma tarefa             |
-| DELETE | `/api/v1/tasks/:id`     | Deletar uma tarefa               |
+<details>
+  <summary>POST - /api/v1/login</summary>
 
-#### 2. Endpoints Usuarios
+### Request:
+  ```json
+    {
+        "email": "dpz@gmail.com",
+        "senha": "123456"
+    }
+  ```
 
-| Método | Rota                    | Descrição                        |
-|--------|-------------------------|----------------------------------|
-| POST   | `/api/v1/users`         | Criar novo usuario               |
-| GET    | `/api/v1/users`         | Listar todos os usuarios         |
-| GET    | `/api/v1/users/:id`     | Lista um usuario                 |
-| PUT    | `/api/v1/users/:id`     | Atualizar um usuario             |
-| DELETE | `/api/v1/users/:id`     | Deletar um usuario               |
+### Result:
+  ```json
+   {
+        "message": "✅ Login realizado com sucesso",
+        "token": "OjE3NDY7VZN8XcWfqTcMhntrbU"
+   }
+  ```
+</details>
 
-#### 3. Endpoints Projects
+---
 
-| Método | Rota                    | Descrição                        |
-|--------|-------------------------|----------------------------------|
-| POST   | `/api/v1/projects`      | Criar novo projeto               |
-| GET    | `/api/v1/projects`      | Listar todos os projeto          |
-| GET    | `/api/v1/projects/:id`  | Lista um projeto                 |
-| PUT    | `/api/v1/projects/:id`  | Atualizar um projeto             |
-| DELETE | `/api/v1/projects/:id`  | Deletar um projeto               |
+> [!WARNING]
+> Endpoints protegidos por autenticação JWT.
+
+### 🔗 Users
+
+<details>
+  <summary>GET - /api/v1/users</summary>
+
+### Info
+> Esse endpoint possui o parametro (?page=) como opcional.
+> Caso o parametro page seja implementado no endpoint, ira retornar um limite de 30 por pagina.
+
+### Result:
+  ```json
+    {
+        "currentPage": 1,
+        "totalPages": 1,
+        "totalInPage": 0,
+        "totalUsers": 0,
+        "users": []
+    }
+  ```
+
+</details>
+
+<details>
+  <summary>GET - /api/v1/users/{id}</summary>
+
+### Result:
+  ```json
+    {
+        "id": 1,
+        "nome": "testeee",
+        "email": "email@gmail.com",
+        "senha": "$J5VgD78T6sUtwzu",
+        "createdAt": "0000-00-00T00:00:00.000Z",
+        "updatedAt": "0000-00-00T00:00:00.000Z"
+    }
+  ```
+</details>
+
+<details>
+  <summary>POST - /api/v1/users</summary>
+
+### Request:
+  ```json
+    {
+        "nome": "teste",
+        "email": "email2@gmail.com",
+        "senha": "123456"
+    }
+  ```
+
+### Result:
+  ```json
+   {
+        "message": "✅ Usuário criado com sucesso",
+        "newUser": {
+            "id": 3,
+            "nome": "teste",
+            "email": "email2@gmail.com",
+            "senha": "$2EK8X4qsRLZNvG",
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
+
+<details>
+  <summary>PUT - /api/v1/users/{id}</summary>
+
+### Info
+> O método PUT se comporta igual ao método PATCH, ou seja, caso queira alterar somente o nome, apenas envie o nome, assim sucessivamente.
+
+### Request:
+  ```json
+    {
+        "nome": "teste234",
+    }
+  ```
+
+### Result:
+  ```json
+   {
+        "message": "✅ Usuário atualizado com sucesso",
+        "user": {
+            "id": 3,
+            "nome": "teste234",
+            "email": "email2@gmail.com",
+            "senha": "$2EK8X4qsRLZNvG",
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
+
+<details>
+  <summary>DELETE - /api/v1/users/{id}</summary>
+
+### Result:
+  ```json
+    {
+        "message": "Deletado com sucesso",
+    }
+  ```
+</details>
+
+---
+
+> [!WARNING]
+> Endpoints protegidos por autenticação JWT.
+
+### 🔗 Projects
+
+<details>
+  <summary>GET - /api/v1/projects</summary>
+
+### Info
+> Esse endpoint possui o parametro (?page=) como opcional.
+> Caso o parametro page seja implementado no endpoint, ira retornar um limite de 30 por pagina.
+
+### Result:
+  ```json
+    {
+        "currentPage": 1,
+        "totalPages": 1,
+        "totalInPage": 0,
+        "totalProjects": 0,
+        "projects": []
+    }
+  ```
+
+</details>
+
+<details>
+  <summary>GET - /api/v1/projects/{id}</summary>
+
+### Result:
+  ```json
+    {
+        "id": 1,
+        "titulo": "Gx",
+        "descricao": "Navegador",
+        "createdAt": "0000-00-00T00:00:00.000Z",
+        "updatedAt": "0000-00-00T00:00:00.000Z"
+    }
+  ```
+</details>
+
+<details>
+  <summary>POST - /api/v1/projects</summary>
+
+### Request:
+  ```json
+    {
+        "titulo": "teste2222",
+        "descricao": "dasdasdasdasd"
+    }
+  ```
+
+### Result:
+  ```json
+   {
+        "message": "✅ Projeto criado com sucesso",
+        "newProject": {
+            "id": 2,
+            "titulo": "teste2222",
+            "descricao": "dasdasdasdasd",
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
+
+<details>
+  <summary>PUT - /api/v1/projects/{id}</summary>
+
+### Info
+> O método PUT se comporta igual ao método PATCH, ou seja, caso queira alterar somente o titulo, apenas envie o titulo, assim sucessivamente.
+
+### Request:
+  ```json
+    {
+        "titulo": "teste2222232323",
+    }
+  ```
+
+### Result:
+  ```json
+   {
+        "message": "✅ Projeto atualizado com sucesso",
+        "project": {
+            "id": 2,
+            "titulo": "teste2222232323",
+            "descricao": "dasdasdasdasd",
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
+
+<details>
+  <summary>DELETE - /api/v1/projects/{id}</summary>
+
+### Result:
+  ```json
+    {
+        "message": "Deletado com sucesso",
+    }
+  ```
+</details>
+
+---
+
+> [!WARNING]
+> Endpoints protegidos por autenticação JWT.
+
+### 🔗 Tasks
+
+<details>
+  <summary>GET - /api/v1/tasks</summary>
+
+### Info
+> Esse endpoint possui o parametro (?page=) como opcional.
+> Caso o parametro page seja implementado no endpoint, ira retornar um limite de 30 por pagina.
+
+### Result:
+  ```json
+    {
+        "currentPage": 1,
+        "totalPages": 1,
+        "totalInPage": 0,
+        "totalTasks": 0,
+        "tasks": []
+    }
+  ```
+
+</details>
+
+<details>
+  <summary>GET - /api/v1/tasks/{id}</summary>
+
+### Result:
+  ```json
+    {
+        "id": 1,
+        "titulo": "Desenvolver 1",
+        "status": "Pendente",
+        "idProject": 2,
+        "idUser": 1,
+        "createdAt": "0000-00-00T00:00:00.000Z",
+        "updatedAt": "0000-00-00T00:00:00.000Z"
+    }
+  ```
+</details>
+
+<details>
+  <summary>POST - /api/v1/tasks</summary>
+
+### Request:
+  ```json
+    {
+        "titulo": "Desenvolver 33",
+        "status": "Pendente",
+        "idProject": 1,
+        "idUser": 3
+    }
+  ```
+
+### Result:
+  ```json
+   {
+        "message": "✅ Tarefa criada com sucesso",
+        "newTask": {
+            "id": 2,
+            "titulo": "Desenvolver 33",
+            "status": "Pendente",
+            "idProject": 1,
+            "idUser": 3
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
+
+<details>
+  <summary>PUT - /api/v1/tasks/{id}</summary>
+
+### Info
+> O método PUT se comporta igual ao método PATCH, ou seja, caso queira alterar somente o titulo, apenas envie o titulo, assim sucessivamente.
+
+### Request:
+  ```json
+    {
+        "titulo": "Desenvolver 9405",
+        "status": "Concluido"
+    }
+  ```
+
+### Result:
+  ```json
+   {
+        "message": "✅ Tarefa atualizada com sucesso",
+        "task": {
+            "id": 2,
+            "titulo": "Desenvolver 33",
+            "status": "Pendente",
+            "idProject": 1,
+            "idUser": 3
+            "createdAt": "0000-00-00T00:00:00.000Z",
+            "updatedAt": "0000-00-00T00:00:00.000Z"
+        }
+   }
+  ```
+</details>
+
+<details>
+  <summary>DELETE - /api/v1/tasks/{id}</summary>
+
+### Result:
+  ```json
+    {
+        "message": "Deletado com sucesso",
+    }
+  ```
+</details>
+
+---
+
+## 📙 Modelos
+
+<details>
+  <summary>Users</summary>
+  
+  ```js
+     {
+        id: {
+            type: INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        nome: {
+            type: STRING
+        },
+        email: {
+            type: STRING
+        },
+        senha: {
+            type: STRING
+        }
+     }
+  ```
+</details>
+
+<details>
+  <summary>Projects</summary>
+  
+  ```js
+     {
+        id: {
+            type: INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        titulo: {
+            type: STRING
+        },
+        descricao: {
+            type: STRING
+        }
+     }
+  ```
+</details>
+
+<details>
+  <summary>Tasks</summary>
+  
+  ```js
+     {
+        id: {
+            type: INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        titulo: {
+            type: STRING
+        },
+        status: {
+            type: STRING
+        },
+        idProject: {
+            type: INTEGER,
+            references: {
+                model: "projects",
+                key: "id"
+            }
+        },
+        idUser: {
+            type: INTEGER,
+            references: {
+                model: "users",
+                key: "id"
+            }
+        }
+     }
+  ```
+</details>
 
 ---
 

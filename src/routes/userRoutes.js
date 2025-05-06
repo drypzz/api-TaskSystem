@@ -4,10 +4,10 @@ const router = express.Router();
 const UserController = require("../controllers/userController");
 router.use(UserController.validateToken);
 
-router.get("projects", UserController.getUsers);
-router.get("projects:id", UserController.getUserByID);
-router.post("projects", UserController.createUser);
-router.put("projects:id", UserController.updateUser);
-router.delete("projects:id", UserController.deleteUser);
+router.get("/users", UserController.getUsers);
+router.get("/users/:id", UserController.getUserByID);
+router.post("/users", UserController.createUser);
+router.put("/users/:id", UserController.updateUser);
+router.delete("/users/:id", UserController.deleteUser);
 
 module.exports = router;
