@@ -5,9 +5,7 @@ Este projeto é uma API RESTful construída com **Node.js**, **Express** e **Seq
 
 ## 📘 Documentação da API
 
-[![SwaggerHub](https://img.shields.io/badge/Documentação-blue?logo=swagger)](https://app.swaggerhub.com/apis-docs/drypzzdev/TaskSystem/1.0.0)
-
-A documentação da API está disponível no SwaggerHub, com exemplos de uso e todos os endpoints descritos.
+- A documentação da API esta no endpoint `/api/v1/docs`
 
 
 ---
