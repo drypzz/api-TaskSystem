@@ -1,0 +1,442 @@
+openapi: 3.0.0
+
+info:
+  title: API RESTful - TaskSystem
+  description: Este projeto é uma API RESTful construída com **Node.js**, **Express** e **Sequelize**, utilizando **MySQL** como banco de dados relacional (via **XAMPP**). A estrutura do projeto segue a arquitetura MVC (Model-View-Controller), garantindo escalabilidade e organização.
+  version: 1.0.0
+  contact:
+    name: Drypzz
+    url: https://drypzz.netlify.app
+    email: gugapalmeiraa@gmail.com
+  license:
+    name: Repositório da API
+    url: https://github.com/drypzz/api-TaskSystem
+    
+x-socials:
+  linkedin: https://www.linkedin.com/in/gustavoaap/
+    
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Servidor local
+    
+tags:
+  - name: Defaults
+    description: Endpoints relacionados a login e registro de um usuario
+  - name: Users
+    description: Endpoints relacionados a usuários
+  - name: Projects
+    description: Endpoints relacionados a projetos
+  - name: Tasks
+    description: Endpoints relacionados a tarefas
+    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        email:
+          type: string
+        senha:
+          type: string
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        descricao:
+          type: string
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        status:
+          type: string
+        idProject:
+          type: integer
+        idUser:
+          type: integer
+paths:
+  /register:
+    post:
+      summary: Registro de novo usuário
+      tags: [Defaults]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nome
+                - email
+                - senha
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+
+  /login:
+    post:
+      summary: Login de usuário
+      tags: [Defaults]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - senha
+              properties:
+                email:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Lista todos os usuários
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currentPage:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  totalInPage:
+                    type: integer
+                  totalUsers:
+                    type: integer
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - Users
+      summary: Cria um novo usuário
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Obtém um usuário pelo ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - Users
+      summary: Atualiza um usuário
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso
+    delete:
+      tags:
+        - Users
+      summary: Deleta um usuário
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Usuário deletado com sucesso
+
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: Lista todos os projetos
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de projetos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currentPage:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  totalInPage:
+                    type: integer
+                  totalProjects:
+                    type: integer
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+    post:
+      tags:
+        - Projects
+      summary: Cria um novo projeto
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Projeto criado com sucesso
+
+  /projects/{id}:
+    get:
+      tags:
+        - Projects
+      summary: Obtém um projeto pelo ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do projeto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    put:
+      tags:
+        - Projects
+      summary: Atualiza um projeto
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Projeto atualizado com sucesso
+    delete:
+      tags:
+        - Projects
+      summary: Deleta um projeto
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Projeto deletado com sucesso
+
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Lista todas as tarefas
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de tarefas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currentPage:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  totalInPage:
+                    type: integer
+                  totalTasks:
+                    type: integer
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+    post:
+      tags:
+        - Tasks
+      summary: Cria uma nova tarefa
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Tarefa criada com sucesso
+
+  /tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      summary: Obtém uma tarefa pelo ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados da tarefa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    put:
+      tags:
+        - Tasks
+      summary: Atualiza uma tarefa
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Tarefa atualizada com sucesso
+    delete:
+      tags:
+        - Tasks
+      summary: Deleta uma tarefa
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tarefa deletada com sucesso

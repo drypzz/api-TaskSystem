@@ -18,6 +18,8 @@
     "mysql2": "^3.14.0",
     "pg": "^8.14.1",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   }
 }
